@@ -1,0 +1,2 @@
+nrpe   ALL = NOPASSWD: /usr/lib64/nagios/plugins/check_smart.pl
+nrpe   ALL = NOPASSWD: /usr/sbin/smartctl

@@ -1,0 +1,83 @@
+---
+- hosts: all
+  remote_user: root
+
+  tasks:
+  - name: install epel
+    yum:
+      name: epel-release
+      state: present
+
+  - name: install nrpe
+    yum:
+      name: nrpe
+      state: present
+
+  - name: install nagios plugins & utils
+    yum:
+      name: [ 'nagios-plugins', 'nagios-common', 'nagios-plugins-load', 'nagios-plugins-uptime', 'mc', 'htop', 'glances', 'iftop', 'screen', 'smartmontools' ]
+      state: present
+
+  - name: install MegaCli
+    yum:
+      name: http://mirror.cogentco.com/pub/misc/MegaCli-8.07.14-1.noarch.rpm
+      state: present
+
+  - name: Symlink MegaCli
+    file:
+     src: /opt/MegaRAID/MegaCli/MegaCli64
+     dest: /usr/bin/MegaCli
+     owner: root
+     group: root
+     state: link
+
+  - name: deploy check_raid.pl
+    copy:
+      src: /etc/ansible/playbook/nagios/check_raid.pl
+      dest: /usr/lib64/nagios/plugins/check_raid.pl
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: deploy aw.awk
+    copy:
+      src: /etc/ansible/playbook/nagios/aw.awk
+      dest: /usr/lib64/nagios/plugins/aw.awk
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: deploy sudoers check_raid
+    copy:
+      src: /etc/ansible/playbook/nagios/check_raid
+      dest: /etc/sudoers.d/check_raid
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: deploy check_smart.pl
+    copy:
+      src: /etc/ansible/playbook/nagios/check_smart.pl
+      dest: /usr/lib64/nagios/plugins/check_smart.pl
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: deploy sudoers check_smart
+    copy:
+      src: /etc/ansible/playbook/nagios/check_smart
+      dest: /etc/sudoers.d/check_smart
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: deploy nrpe.cfg
+    copy:
+      src: /etc/ansible/playbook/nagios/nrpe.cfg
+      dest: /etc/nagios/nrpe.cfg
+
+  handlers:
+  - name: restart nrpe
+    service:
+      name: nrpe
+      state: restarted

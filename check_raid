@@ -1,0 +1,6 @@
+# Lines matching CHECK_RAID added by ./check_raid.pl -S
+User_Alias CHECK_RAID=nrpe
+Defaults:CHECK_RAID !requiretty
+CHECK_RAID ALL=(root) NOPASSWD: /opt/MegaRAID/MegaCli/MegaCli64 -PDList -aALL -NoLog
+CHECK_RAID ALL=(root) NOPASSWD: /opt/MegaRAID/MegaCli/MegaCli64 -LdInfo -Lall -aALL -NoLog
+CHECK_RAID ALL=(root) NOPASSWD: /opt/MegaRAID/MegaCli/MegaCli64 -AdpBbuCmd -GetBbuStatus -aALL -NoLog
